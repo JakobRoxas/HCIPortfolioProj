@@ -1,0 +1,636 @@
+/*==============================================================================
+  TABLE OF CONTENTS
+  
+  1. IMPORTS & VARIABLES
+  2. BASE STYLES & GLOBAL ELEMENTS
+  3. BACKGROUND & LAYOUT
+  4. HEADER & PROFILE
+  5. BIO & CONTACT SECTION
+  6. PROJECT SECTION
+  7. FOOTER
+  8. ANIMATIONS & TRANSITIONS
+  9. AUDIO VISUALIZER
+  10. MEDIA QUERIES & RESPONSIVE DESIGN
+==============================================================================*/
+
+/*==============================================================================
+  1. IMPORTS & VARIABLES
+==============================================================================*/
+@import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
+
+:root {
+    /* Color palette */
+    --primary-color: #00aaff;
+    --primary-dark: #0073cf;
+    --primary-darker: #00539C;
+    --secondary-dark: #003366;
+    --secondary-darker: #004080;
+    --background-main: #0a0a2a;
+    --background-grad: #1b1b4d;
+    --text-color: #d1d1ff;
+    --text-light: #fff;
+    --text-dim: #888;
+    
+    /* Animation timing */
+    --transition-fast: 0.3s ease;
+    --transition-medium: 0.5s ease;
+    --transition-slow: 1s ease-in-out;
+    
+    /* Background transition variables */
+    --first-bg-opacity: 1;
+    --second-bg-opacity: 0;
+    
+    /* Spacing */
+    --container-width: 1200px;
+    --section-spacing: 40px;
+}
+
+/*==============================================================================
+  2. BASE STYLES & GLOBAL ELEMENTS
+==============================================================================*/
+body {
+    background: linear-gradient(to bottom, var(--background-main), var(--background-grad));
+    color: var(--text-color);
+    font-family: 'Kosugi Maru', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Typography styles */
+h1, h2, h3 {
+    margin: 0 0 5px 0;
+}
+
+.quote {
+    font-style: italic;
+    color: var(--primary-color);
+    transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.quote:hover {
+    color: #00d0ff;
+}
+
+/*==============================================================================
+  3. BACKGROUND & LAYOUT
+==============================================================================*/
+/* First background image layer with overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(to bottom, rgba(10, 10, 42, 0.8), rgba(10, 10, 42, 0.8)),
+        url('photos/coverphoto.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+    opacity: 1;
+    transition: opacity 1.5s ease-in-out;
+}
+
+/* Second background image layer with overlay - initially hidden */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(to bottom, rgba(0, 10, 50, 0.7), rgba(8, 20, 60, 0.5)),
+        url('photos/coverphoto2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -3;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+/* Background opacity control on scroll */
+body.scrolled::before {
+    opacity: var(--first-bg-opacity);
+}
+
+body.scrolled::after {
+    opacity: var(--second-bg-opacity);
+}
+
+/* Main content container */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: var(--container-width);
+    padding: 80px 20px;
+    box-sizing: border-box;
+}
+
+header {
+    position: relative;
+    width: 100%;
+}
+
+/*==============================================================================
+  4. HEADER & PROFILE
+==============================================================================*/
+/* Profile picture container with animation setup */
+.profile-pic-container {
+    position: relative;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    opacity: 0; /* Initially hidden for animation */
+    transform: translateY(-20px);
+    transition: var(--transition-slow);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 220px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-pic {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 170, 255, 0.7),
+                inset 0 0 20px rgba(0, 170, 255, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 10;
+}
+
+.profile-pic-container:hover .profile-pic {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(0, 170, 255, 0.9);
+}
+
+/* Subtle floating animation for profile pic */
+@keyframes float {
+    0% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-2px) rotate(0.5deg); }
+    50% { transform: translateY(0) rotate(0deg); }
+    75% { transform: translateY(2px) rotate(-0.5deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
+
+.profile-pic-container:hover .profile-pic {
+    animation: float 3s ease-in-out infinite;
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(0, 200, 255, 0.9),
+                inset 0 0 30px rgba(0, 200, 255, 0.6);
+}
+
+#name {
+    margin-top: 10px;
+    opacity: 0; /* Initially hidden for animation */
+    transform: translateY(-20px);
+    transition: var(--transition-slow);
+}
+
+/*==============================================================================
+  5. BIO & CONTACT SECTION
+==============================================================================*/
+.bio {
+    font-family: 'Kosugi Maru', sans-serif;
+    margin: 30px 0;
+    max-width: 800px;
+    padding: 0 20px;
+    color: var(--text-light);
+    opacity: 0; /* Initially hidden for animation */
+    transform: translateY(-20px);
+    transition: var(--transition-slow);
+}
+
+/* Contact section with social links */
+.contact {
+    margin: 40px 0;
+}
+
+.contact-link {
+    display: inline-block;
+    margin: 15px;
+    padding: 15px 30px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 1.3em;
+    border-radius: 10px;
+    background: rgba(0, 0, 50, 0.6);
+    transition: var(--transition-fast);
+    box-shadow: 0 0 10px rgba(0, 0, 255, 0.3);
+}
+
+.contact-link i {
+    margin-right: 10px;
+}
+
+.contact-link:hover {
+    background: var(--primary-color);
+    box-shadow: 0 0 15px var(--primary-color);
+    transform: scale(1.1);
+}
+
+/*==============================================================================
+  6. PROJECT SECTION
+==============================================================================*/
+/* Projects section container */
+.projects-section {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 40px;
+    padding-bottom: 60px;
+    opacity: 0; /* Initially hidden for animation */
+    transform: translateY(20px);
+    transition: var(--transition-slow);
+}
+
+.projects-section h2 {
+    margin-bottom: 25px;
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+}
+
+/* Improved carousel container */
+.carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 0, 100, 0.3);
+    background: rgba(0, 20, 60, 0.3);
+    padding: 15px;
+    min-height: 300px;
+    transition: all 0.5s ease;
+}
+
+/* Static display for all cards */
+.carousel-track {
+    display: block !important;
+    position: relative;
+}
+
+/* Project card styling - spaced out for better readability */
+.project-card {
+    min-height: 100px;
+    width: 100%;
+    background: linear-gradient(to right, var(--primary-darker), var(--primary-dark));
+    color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-left: 5px solid var(--primary-color);
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+/* Alternate background for even cards */
+.project-card:nth-child(even) {
+    background: linear-gradient(to right, var(--secondary-dark), var(--secondary-darker));
+}
+
+/* Small dot indicator on each card */
+.project-card::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+/* Hover effects for project cards */
+.project-card:hover {
+    background: linear-gradient(to right, #0062bd, #0085e6);
+    transform: translateX(5px);
+}
+
+.project-card:nth-child(even):hover {
+    background: linear-gradient(to right, var(--secondary-darker), #006dd6);
+    transform: translateX(5px);
+}
+
+/* Improved Project card expanded state */
+.project-card.expanded {
+    height: auto;
+    min-height: 180px;
+    background: linear-gradient(to right, #004080, #0062bd);
+    transform: translateX(8px);
+    z-index: 10; /* Higher z-index for expanded cards */
+    border-left: 5px solid #00c3ff; /* Brighter border for expanded state */
+    box-shadow: 0 0 15px rgba(0, 170, 255, 0.3);
+    margin-bottom: 25px; /* Extra space when expanded */
+}
+
+/* Project card inner elements */
+.project-date {
+    min-width: 60px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.project-icon {
+    margin: 0 15px;
+    font-size: 1.3em;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.project-info {
+    flex-grow: 1;
+    text-align: left;
+    padding-right: 30px;
+    padding-left: 10px;
+}
+
+.project-info h3 {
+    font-size: 1.2em;
+}
+
+.project-info p {
+    margin: 0;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+/* Project details when expanded */
+.project-details {
+    width: 100%;
+    padding-top: 15px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: left;
+}
+
+.project-tech {
+    margin: 10px 0;
+}
+
+.tech-tag {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--primary-color);
+    padding: 3px 8px;
+    margin-right: 5px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.project-link {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    margin-top: 5px;
+    font-weight: bold;
+    transition: var(--transition-fast);
+}
+
+.project-link:hover {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.project-link i {
+    margin-left: 5px;
+    transition: var(--transition-fast);
+}
+
+.project-link:hover i {
+    transform: translateX(3px);
+}
+
+/*==============================================================================
+  7. FOOTER
+==============================================================================*/
+footer {
+    margin: 60px 0 30px;
+    font-size: 1em;
+    color: var(--text-dim);
+    opacity: 0; /* Initially hidden for animation */
+    transform: translateY(20px);
+    transition: var(--transition-slow);
+}
+
+/*==============================================================================
+  8. ANIMATIONS & TRANSITIONS
+==============================================================================*/
+/* Floating particles background */
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--primary-color);
+    animation: float-particle linear infinite;
+}
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg);
+    }
+}
+
+/* Audio controls styling */
+.audio-control {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 10, 40, 0.7);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.audio-control:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+/*==============================================================================
+  9. AUDIO VISUALIZER
+==============================================================================*/
+/* Circular Profile Visualizer */
+.profile-visualizer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;  /* Larger than profile pic */
+    height: 220px;
+    border-radius: 50%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* Animation for pulsating visualizer */
+@keyframes circle-pulse {
+    0% { transform: translate(-50%, -50%) scale(0.98); }
+    50% { transform: translate(-50%, -50%) scale(1.02); }
+    100% { transform: translate(-50%, -50%) scale(0.98); }
+}
+
+.profile-visualizer.playing {
+    animation: circle-pulse 8s infinite ease-in-out;
+}
+
+/* Audio notification - won't be shown but kept for fallback */
+.audio-notification {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+}
+
+.audio-notification.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/*==============================================================================
+  10. MEDIA QUERIES & RESPONSIVE DESIGN
+==============================================================================*/
+/* Medium screens */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 40px 15px;
+    }
+    
+    .profile-pic-container {
+        margin-top: 30px;
+        width: 180px !important;
+        height: 180px !important;
+    }
+    
+    .profile-visualizer {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .bio {
+        margin: 20px 0;
+    }
+    
+    .projects-section {
+        padding-bottom: 40px;
+    }
+    
+    .contact-link {
+        padding: 12px 20px;
+        font-size: 1.1em;
+    }
+}
+
+/* Small screens */
+@media (max-width: 600px) {
+    .profile-pic-container {
+        width: 160px !important;
+        height: 160px !important;
+    }
+    
+    .profile-visualizer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        z-index: 5;
+        pointer-events: none;
+        overflow: visible; /* Allow ripples to extend beyond container */
+    }
+    
+    .project-date {
+        min-width: 40px;
+        font-size: 0.9em;
+    }
+    
+    .project-icon {
+        margin: 0 10px;
+    }
+    
+    .project-info h3 {
+        font-size: 1em;
+    }
+    
+    .project-info p {
+        font-size: 0.8em;
+    }
+    
+    .carousel-container {
+        padding: 10px;
+    }
+    
+    .audio-control {
+        bottom: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+    }
+    
+    /* Make profile pic smaller on mobile */
+    .profile-pic {
+        width: 80px;
+        height: 80px;
+    }
+}
